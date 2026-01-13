@@ -17,22 +17,16 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { useEffect, useState } from "react"
+import { useLogin } from "@/app/hooks/use-login"
+import { useRouter } from "next/navigation"
 
 
 export function LoginForm({
   className,
   ...props
-}: React.ComponentProps<"div">) {
-
-  const[email, setEmail] = useState("")
-  const Change = (e:any) => {
-    setEmail(e.target.value)
-  }
-
-  useEffect(() => {
-    console.log(email)
-  }, [email])
+}: React.ComponentProps<"div">) {  
+  const login = useLogin();
+  const router = useRouter();
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -41,14 +35,15 @@ export function LoginForm({
           <CardTitle className="text-xl">Welcome back</CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={login.handleLogin}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
                   id="email"
                   type="email"
-                  onChange={Change}
+                  value={login.email}
+                  onChange={(e) => login.setEmail(e.target.value)}
                   placeholder="m@example.com"
                   required
                 />
@@ -63,18 +58,25 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input 
+                  id="password" 
+                  type="password"
+                  value={login.password}
+                  onChange={(e) => login.setPassword(e.target.value)}
+                  required 
+                />
               </Field>
+              {login.error && <p className="text-red-500 text-sm">{login.error}</p>}
               <Field>
                 <Button 
                   type="submit"
-                  onClick={() => {
-                    document.location.href = "/otp";
-                  }}>Login</Button>
+                  disabled={login.loading}>
+                  {login.loading ? "Connexion..." : "Login"}
+                </Button>
                 <FieldDescription 
                   className="text-center"
                   onClick={() => {
-                    document.location.href = "/signup";
+                    router.push("/signup");
                   }}>
                   Don&apos;t have an account? <a href="#">Sign up</a>
                 </FieldDescription>
