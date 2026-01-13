@@ -5,7 +5,7 @@ export const ArgonHash = async (hash: string) => {
         await argon2i.hash(hash);
     } catch (e) {
         console.log(e);
-        return false
+        return "false"
     }
 }
 
@@ -14,6 +14,6 @@ export const ArgonVerify = async (hash: string, verify: string) => {
         await argon2i.verify(hash, verify);
     } catch (e) {
         console.log(e);
-        return false;
+        return "false";
     }
 }
