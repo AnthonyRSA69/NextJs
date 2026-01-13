@@ -7,15 +7,18 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
     const { firstName, lastName, email, password, confirmPassword }: IRegister = await request.json();
-    
+
+    // Validation
     const errors = MRegister({ firstName, lastName, email, password, confirmPassword });
     if (errors.length > 0) {
         return NextResponse.json(errors, { status: 400 });
     }
-    
+
     try {
+        // Hacher le password
         const hashedPassword = await ArgonHash(password);
-        
+
+        // Créer l'utilisateur
         const user = await prisma.user.create({
             data: {
                 firstName,
@@ -24,7 +27,7 @@ export async function POST(request: NextRequest) {
                 password: hashedPassword,
             },
         });
-        
+
         return NextResponse.json({ 
             error: false, 
             data: {
