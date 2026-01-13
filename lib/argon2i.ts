@@ -1,19 +1,21 @@
 import argon2i from "argon2";
 
-export const ArgonHash = async (hash: string) => {
+export const ArgonHash = async (password: string): Promise<string> => {
     try {
-        await argon2i.hash(hash);
+        const hashed = await argon2i.hash(password);
+        return hashed;
     } catch (e) {
-        console.log(e);
-        return "false"
+        console.error(e);
+        throw new Error("Erreur lors du hachage du password");
     }
 }
 
-export const ArgonVerify = async (hash: string, verify: string) => {
+export const ArgonVerify = async (hash: string, password: string): Promise<boolean> => {
     try {
-        await argon2i.verify(hash, verify);
+        const isValid = await argon2i.verify(hash, password);
+        return isValid;
     } catch (e) {
-        console.log(e);
-        return "false";
+        console.error(e);
+        return false;
     }
 }

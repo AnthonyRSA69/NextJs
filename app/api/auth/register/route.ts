@@ -1,35 +1,44 @@
 import type { NextRequest } from "next/server";
 import type { IRegister } from "@/app/interfaces/users";
 import { MRegister } from "@/middleware/register";
-import { PrismaClient } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { ArgonHash } from "@/lib/argon2i";
+import { NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-    const {firstName, lastName, email, password, confirmPassword} : IRegister = await request.json();
-    const middle = MRegister({firstName, lastName, email, password, confirmPassword});
-    if (middle.length >= 0) {
-        return Response.json(middle);
+    const { firstName, lastName, email, password, confirmPassword }: IRegister = await request.json();
+    
+    const errors = MRegister({ firstName, lastName, email, password, confirmPassword });
+    if (errors.length > 0) {
+        return NextResponse.json(errors, { status: 400 });
     }
+    
     try {
-        const ps : string | undefined = await ArgonHash(password);
-        prisma.user.create({
+        const hashedPassword = await ArgonHash(password);
+        
+        const user = await prisma.user.create({
             data: {
-                firstName : firstName,
-                lastName : lastName,
-                email: email,
-                password: ps as string
+                firstName,
+                lastName,
+                email,
+                password: hashedPassword,
             },
-        })
-        return Response.json({ error: false, data:{
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            password: ps as string
-        }})
+        });
+        
+        return NextResponse.json({ 
+            error: false, 
+            data: {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+            }
+        }, { status: 201 });
     } catch (e) {
-        console.log(e);
-        return Response.json({ error: true, message:"error",code:"E02"  })
+        console.error(e);
+        return NextResponse.json({ 
+            error: true, 
+            message: "Erreur lors de l'enregistrement", 
+            code: "E02" 
+        }, { status: 500 });
     }
-    return Response.json({ message: "Register route is working!" });
 }
