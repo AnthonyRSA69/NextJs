@@ -10,8 +10,8 @@ export async function POST(request: NextRequest) {
 
     // Validation
     const errors = MRegister({ firstName, lastName, email, password, confirmPassword });
-    if (errors.length > 0) {
-        return NextResponse.json(errors, { status: 400 });
+    if (errors && errors.length > 0) {
+        return NextResponse.json({ error: true, validation: errors }, { status: 400 });
     }
 
     try {
