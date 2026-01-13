@@ -52,7 +52,7 @@ export type LogOptions<ClientOptions extends Prisma.PrismaClientOptions> =
 
 export interface PrismaClientConstructor {
     /**
-   * ## Prisma Client
+   * ## 
    * 
    * Type-safe database client for TypeScript
    * @example
@@ -74,7 +74,7 @@ export interface PrismaClientConstructor {
 }
 
 /**
- * ## Prisma Client
+ * ## 
  * 
  * Type-safe database client for TypeScript
  * @example
