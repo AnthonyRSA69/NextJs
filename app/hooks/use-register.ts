@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { use, useState } from "react"
 import { useRouter } from "next/navigation"
 import { IRegister } from "../interfaces/users"
+import { useOTP } from "./use-otp"
 
 interface ValidationError {
     error: boolean
@@ -36,9 +37,7 @@ export function useRegister() {
             confirmPassword
         }
 
-        try {
-            console.log("Envoi:", { ...formData, password: "***", confirmPassword: "***" })
-            
+        try {            
             const response = await fetch("/api/auth/register", {
                 method: "POST",
                 headers: {
@@ -61,7 +60,7 @@ export function useRegister() {
                     console.log("Messages extraits:", messages)
                     
                     setValidationErrors(messages)
-                    setError("Veuillez corriger les erreurs ci-dessous")
+                    setError("Veuillez corriger les erreurs ci-dessus")
                     return
                 }
                 
@@ -70,8 +69,12 @@ export function useRegister() {
             }
 
             console.log("Inscription réussie")
-            router.push("/otp")
+            const mail = useOTP(email, "")
+            const otpResponse = await mail.send()
+            console.log("OTP send response:", otpResponse)
             
+            router.push("/otp")
+
         } catch (err: any) {
             console.error("Erreur:", err)
             setError("Erreur de connexion au serveur")
