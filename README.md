@@ -197,7 +197,6 @@ model User {
   - ✅ Formulaire de connexion avec mdp oublié
   - ✅ Génération JWT et cookies HttpOnly
   - ✅ Configuration Neon PostgreSQL
-  - ✅ Formulaire d'inscription avec validation
   - ✅ Gestion des branches Git et merges
 
 - **Irene ARCHIMBAUD**
