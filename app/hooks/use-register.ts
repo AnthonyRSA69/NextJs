@@ -70,7 +70,7 @@ export function useRegister() {
             }
 
             console.log("Inscription réussie")
-            router.push("/login?registered=true")
+            router.push("/otp")
             
         } catch (err: any) {
             console.error("Erreur:", err)
