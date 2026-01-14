@@ -1,4 +1,5 @@
-import { useOTP } from "@/app/hooks/use-otp"
+"use client"
+
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -18,44 +19,106 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
-import { use } from "react"
+import { useState } from "react"
 
-export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
-  //const Verification =  useOTP("","");
+interface OTPFormProps {
+  email: string
+  onSuccess?: () => void
+}
+
+export function OTPForm({ email, onSuccess, ...props }: OTPFormProps & React.ComponentProps<typeof Card>) {
+  const [code, setCode] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState(false)
+
+  const handleVerify = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (code.length !== 6) {
+      setError("Le code doit avoir 6 chiffres")
+      return
+    }
+
+    setLoading(true)
+    setError("")
+
+    try {
+      const response = await fetch("/api/auth/otp/verify", {
+        method: "POST",
+        body: JSON.stringify({ email, code }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.message || "Code incorrect")
+        return
+      }
+
+      setSuccess(true)
+      if (onSuccess) onSuccess()
+    } catch (err) {
+      setError("Erreur réseau")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (success) {
+    return (
+      <Card className="border-0 shadow-2xl bg-gradient-to-b from-slate-800 to-slate-900 text-white" {...props}>
+        <CardHeader className="text-center">
+        <CardTitle className="text-2xl font-bold text-green-400">✓ Succès!</CardTitle>
+        <CardDescription className="text-slate-400">Votre compte a été créé avec succès</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <a href="/login" className="block w-full text-center bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-2 px-4 rounded">
+            Se connecter
+          </a>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
-    <Card {...props}>
+    <Card className="border-0 shadow-2xl bg-gradient-to-b from-slate-800 to-slate-900 text-white" {...props}>
       <CardHeader className="text-center">
-        <CardTitle className="text-xl">Enter verification code</CardTitle>
-        <CardDescription>We sent a 6-digit code to your email.</CardDescription>
+        <CardTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Vérifier votre email</CardTitle>
+        <CardDescription className="text-slate-400">Code envoyé à {email}</CardDescription>
       </CardHeader>
       <CardContent>
-        <form /*onSubmit={Verification.verify}*/>
+        <form onSubmit={handleVerify}>
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="otp" className="sr-only">
-                Verification code
-              </FieldLabel>
-              <InputOTP maxLength={6} id="otp" required>
-                <InputOTPGroup className="gap-2.5 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border">
-                  <InputOTPSlot index={0}/>
-                  <InputOTPSlot index={1}/>
-                  <InputOTPSlot index={2}/>
-                  <InputOTPSlot index={3}/>
-                  <InputOTPSlot index={4}/>
-                  <InputOTPSlot index={5}/>
+              <InputOTP 
+                maxLength={6} 
+                value={code}
+                onChange={setCode}
+                disabled={loading}
+              >
+                <InputOTPGroup className="gap-2.5 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border *:data-[slot=input-otp-slot]:bg-slate-700 *:data-[slot=input-otp-slot]:border-slate-600 *:data-[slot=input-otp-slot]:text-white *:data-[slot=input-otp-slot]:focus:border-purple-500 *:data-[slot=input-otp-slot]:focus:ring-purple-500">
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
                 </InputOTPGroup>
               </InputOTP>
-              <FieldDescription className="text-center">
-                Enter the 6-digit code sent to your email.
-              </FieldDescription>
+              {error && <FieldDescription className="text-center text-red-400 mt-2">{error}</FieldDescription>}
             </Field>
-            <Button type="submit">Verify</Button>
-            <FieldDescription className="text-center">
-              Didn&apos;t receive the code ? <a href="#">Resend</a>
-            </FieldDescription>
+            <Button 
+              type="submit" 
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold"
+              disabled={loading || code.length !== 6}
+            >
+              {loading ? "Vérification en cours..." : "Vérifier"}
+            </Button>
           </FieldGroup>
         </form>
       </CardContent>
     </Card>
   )
 }
+
