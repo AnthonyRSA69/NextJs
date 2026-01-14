@@ -181,13 +181,13 @@ model User {
 
 | Membre | Rôle |
 |---|---|
-| **Richier Anthony** | Inscription, OTP, **Intégration Resend** |
+| **Richer Anthony** | Inscription, OTP, **Intégration Resend** |
 | **Allier Esteban** | Connexion, Oubli password, Setup BDD, Git |
 | **Archimbaud Irene** | Stripe, Dashboard, UI |
 
 ### Détails des contributions
 
-- **Richier Anthony**
+- **Richer Anthony**
   - ✅ Formulaire d'inscription avec validation
   - ✅ Page et intégration OTP
   - ✅ Mise en place **Resend** pour emails automatiques
