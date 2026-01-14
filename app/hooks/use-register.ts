@@ -69,24 +69,12 @@ export function useRegister() {
             }
 
             console.log("Inscription réussie")
-
-            console.log("*email:", email)
-            const otpResponse = await fetch("/api/auth/otp/send", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
-            });
-            const otpData = await otpResponse.json();
-            console.log("OTP API response:", otpData);
+            const mail = useOTP(email, "")
+            const otpResponse = await mail.send()
+            console.log("OTP send response:", otpResponse)
             
             router.push("/otp")
-            /*const mail = await fetch("/api/auth/otp/send", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            })*/
+
         } catch (err: any) {
             console.error("Erreur:", err)
             setError("Erreur de connexion au serveur")

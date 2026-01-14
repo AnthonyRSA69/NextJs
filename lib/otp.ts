@@ -25,7 +25,7 @@ export async function sendOTP(email: string) {
       html: `<p>Votre code de vérif est le suivant : <strong>${code}</strong><br/>Valable 10 minutes.</p>`,
     });
 
-    console.log("Email envoyé avec succès !");
+    console.log("Email envoye avec succes !");
   } catch (err) {
     console.error("Erreur lors de l'envoi de l'OTP :", err);
   }
