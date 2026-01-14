@@ -20,6 +20,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp"
 import { useState } from "react"
+import { useOTP } from "@/app/hooks/use-otp"
 
 interface OTPFormProps {
   email: string
@@ -27,45 +28,9 @@ interface OTPFormProps {
 }
 
 export function OTPForm({ email, onSuccess, ...props }: OTPFormProps & React.ComponentProps<typeof Card>) {
-  const [code, setCode] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState(false)
+  const otpCode  = useOTP(email)
 
-  const handleVerify = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (code.length !== 6) {
-      setError("Le code doit avoir 6 chiffres")
-      return
-    }
-
-    setLoading(true)
-    setError("")
-
-    try {
-      const response = await fetch("/api/auth/otp/verify", {
-        method: "POST",
-        body: JSON.stringify({ email, code }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        setError(data.message || "Code incorrect")
-        return
-      }
-
-      setSuccess(true)
-      if (onSuccess) onSuccess()
-    } catch (err) {
-      setError("Erreur réseau")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  if (success) {
+  if (otpCode.success) {
     return (
       <Card className="border-0 shadow-2xl bg-gradient-to-b from-slate-800 to-slate-900 text-white" {...props}>
         <CardHeader className="text-center">
@@ -88,14 +53,14 @@ export function OTPForm({ email, onSuccess, ...props }: OTPFormProps & React.Com
         <CardDescription className="text-slate-400">Code envoyé à {email}</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleVerify}>
+        <form onSubmit={otpCode.verify}>
           <FieldGroup>
             <Field>
               <InputOTP 
                 maxLength={6} 
-                value={code}
-                onChange={setCode}
-                disabled={loading}
+                value={otpCode.code}
+                onChange={otpCode.setCode}
+                disabled={otpCode.loading}
               >
                 <InputOTPGroup className="gap-2.5 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border *:data-[slot=input-otp-slot]:bg-slate-700 *:data-[slot=input-otp-slot]:border-slate-600 *:data-[slot=input-otp-slot]:text-white *:data-[slot=input-otp-slot]:focus:border-purple-500 *:data-[slot=input-otp-slot]:focus:ring-purple-500">
                   <InputOTPSlot index={0} />
@@ -106,14 +71,14 @@ export function OTPForm({ email, onSuccess, ...props }: OTPFormProps & React.Com
                   <InputOTPSlot index={5} />
                 </InputOTPGroup>
               </InputOTP>
-              {error && <FieldDescription className="text-center text-red-400 mt-2">{error}</FieldDescription>}
+              {otpCode.error && <FieldDescription className="text-center text-red-400 mt-2">{otpCode.error}</FieldDescription>}
             </Field>
             <Button 
               type="submit" 
               className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold"
-              disabled={loading || code.length !== 6}
+              disabled={otpCode.loading || otpCode.code.length !== 6}
             >
-              {loading ? "Vérification en cours..." : "Vérifier"}
+              {otpCode.loading ? "Vérification en cours..." : "Vérifier"}
             </Button>
           </FieldGroup>
         </form>

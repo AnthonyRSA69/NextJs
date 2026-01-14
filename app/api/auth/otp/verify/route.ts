@@ -15,12 +15,10 @@ export async function POST(req: Request) {
   });
 
   if (!otp) {
-    console.log("[OTP VERIFY] OTP not found or already used");
     return NextResponse.json({ error: true, message: "code incorrecte" }, { status: 400 });
   }
 
   if (otp.expiresAt < new Date()) {
-    console.log("[OTP VERIFY] OTP expired");
     return NextResponse.json({error: true, message: "code expirée" }, { status: 400 });
   }
 
@@ -30,9 +28,7 @@ export async function POST(req: Request) {
     data: { used: true }
   });
 
-  console.log("[OTP VERIFY] OTP verified successfully");
-
-  // Get temp user data from JWT cookie
+// regarde les info du jwt pour creer l'user
   const cookieStore = await cookies();
   const tempToken = cookieStore.get("tempUserToken")?.value;
 
@@ -43,7 +39,6 @@ export async function POST(req: Request) {
 
     if (userData) {
       try {
-        // Create user in database
         const user = await prisma.user.create({
           data: {
             firstName: userData.firstName,
@@ -55,7 +50,7 @@ export async function POST(req: Request) {
 
         console.log("[OTP VERIFY] User created successfully:", user.email);
 
-        // Clear temp token
+        // suppresion du temp
         const response = NextResponse.json({ 
           error: false, 
           message: "Compte créé et vérifié!",
@@ -69,9 +64,8 @@ export async function POST(req: Request) {
         response.cookies.delete("tempUserToken");
         return response;
       } catch (err: any) {
-        console.error("[OTP VERIFY] Error creating user:", err);
         
-        // Check if user already exists
+        //chcek si l'user exite deja
         if (err.code === "P2002") {
           return NextResponse.json({ 
             error: true, 
@@ -87,6 +81,5 @@ export async function POST(req: Request) {
     }
   }
 
-  // If no temp token, just mark OTP as verified (for login flow)
   return NextResponse.json({ error: false, message: "Validé !" });
 }

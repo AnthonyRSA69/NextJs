@@ -16,10 +16,9 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-        // Hash password
         const hashedPassword = await ArgonHash(password);
 
-        // Create temp JWT with user data (valid for 15 minutes)
+        // creation jwt temporaire
         const tempToken = await createTempUserJWT({
             firstName,
             lastName,
@@ -27,8 +26,6 @@ export async function POST(request: NextRequest) {
             password: hashedPassword,
         });
 
-        // Send OTP
-          // Send OTP
         const otpResult = await sendOTP(email);
         if (!otpResult.code) {
             return NextResponse.json({ 
@@ -38,7 +35,6 @@ export async function POST(request: NextRequest) {
             }, { status: 500 });
         }
 
-        // Return JWT to client (store in cookie)
         const response = NextResponse.json({ 
             error: false, 
             message: "OTP envoyé. Vérifiez votre email.",
