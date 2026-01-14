@@ -1,6 +1,6 @@
 "use client"
 
-import { use, useState } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { IRegister } from "../interfaces/users"
 import { useOTP } from "./use-otp"
@@ -55,7 +55,6 @@ export function useRegister() {
                 if (response.status === 400 && data.validation) {
                     console.log("Erreurs de validation:", data.validation)
                     
-                    // Extraction des messages depuis les objets
                     const messages = data.validation.map((err: ValidationError) => err.message)
                     console.log("Messages extraits:", messages)
                     
@@ -68,12 +67,8 @@ export function useRegister() {
                 return
             }
 
-            console.log("Inscription réussie")
-            const mail = useOTP(email, "")
-            const otpResponse = await mail.send()
-            console.log("OTP send response:", otpResponse)
-            
-            router.push("/otp")
+            console.log("Inscription réussie, OTP envoyé")
+            router.push(`/otp?email=${email}`)
 
         } catch (err: any) {
             console.error("Erreur:", err)
