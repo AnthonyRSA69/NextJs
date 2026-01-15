@@ -1,3 +1,4 @@
+// login route API
 import type { NextRequest } from "next/server";
 import type { ILogin } from "@/app/interfaces/users";
 import { MLogin } from "@/middleware/login";
@@ -7,7 +8,6 @@ import { ArgonVerify } from "@/lib/argon2i";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
-
 export async function POST(request: NextRequest) {
     const { email, password}: ILogin = await request.json();
     const middle = MLogin({email, password});

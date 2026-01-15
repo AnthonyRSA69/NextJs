@@ -1,12 +1,7 @@
-
+// STRIPE Checkout API
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-
-// Log environment variables for debugging (do not log secrets in production)
-console.log("[DEBUG] STRIPE_SECRET_KEY exists:", !!process.env.STRIPE_SECRET_KEY);
-console.log("[DEBUG] NEXT_PUBLIC_BASE_URL:", process.env.NEXT_PUBLIC_BASE_URL);
-console.log("[DEBUG] JWT_SECRET exists:", !!process.env.JWT_SECRET);
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-12-15.clover",
@@ -32,8 +27,6 @@ export async function POST(request: Request) {
         }
       }
     }
-
-
     if (customerEmail) {
 
       const customers = await stripe.customers.list({ email: customerEmail, limit: 1 });
@@ -46,7 +39,6 @@ export async function POST(request: Request) {
       }
     }
 
-    // Only pass either customer or customer_email, not both
     const sessionParams: any = {
       mode: "payment",
       payment_method_types: ["card"],
@@ -78,10 +70,6 @@ export async function POST(request: Request) {
     if (error && error.stack) {
       console.error("[STRIPE CHECKOUT ERROR STACK]", error.stack);
     }
-    // Log environment variables at error time
-    console.error("[DEBUG] STRIPE_SECRET_KEY exists:", !!process.env.STRIPE_SECRET_KEY);
-    console.error("[DEBUG] NEXT_PUBLIC_BASE_URL:", process.env.NEXT_PUBLIC_BASE_URL);
-    console.error("[DEBUG] JWT_SECRET exists:", !!process.env.JWT_SECRET);
     return NextResponse.json(
       { error: "Erreur Stripe", details: error?.message || error },
       { status: 500 }

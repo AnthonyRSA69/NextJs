@@ -1,3 +1,4 @@
+// STRIPE Invoice API
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
 
@@ -27,7 +28,6 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: `Impossible de supprimer une facture au statut '${invoice.status}'.` }, { status: 400 });
     }
   } catch (err: any) {
-    console.error("INVOICE DELETE/VOID ERROR:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
@@ -75,7 +75,6 @@ export async function POST(req: Request) {
     }
     return NextResponse.json({ error: "Paramètres manquants" }, { status: 400 });
   } catch (err: any) {
-    console.error("INVOICE ERROR:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
