@@ -2,12 +2,11 @@
 
 import { GalleryVerticalEnd } from "lucide-react"
 import { OTPForm } from "@/components/otp-form"
-import { useSearchParams, useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 
-export default function OTPPage() {
+function OTPContent() {
   const searchParams = useSearchParams()
-  const router = useRouter()
   const email = searchParams.get("email") || ""
   const mode = searchParams.get("mode") || ""
   
@@ -19,6 +18,14 @@ export default function OTPPage() {
         <OTPForm email={email} mode={mode} />
       </div>
     </div>
+  )
+}
+
+export default function OTPPage() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <OTPContent />
+    </Suspense>
   )
 }
 

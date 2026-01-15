@@ -53,7 +53,7 @@ export function LoginForm({
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password" className="text-slate-200">Password</FieldLabel>
                   <a
-                    href="/forgot-password"
+                    href="/password-forgot"
                     className="ml-auto text-sm text-purple-400 underline-offset-4 hover:text-purple-300 hover:underline hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.5)] transition-all duration-200"
                   >
                     Mot de passe oublié?
