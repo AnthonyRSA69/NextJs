@@ -7,11 +7,13 @@ Application web production-ready construite avec **Next.js 16**, **Prisma**, et 
 - ✅ Système d'authentification sécurisé (JWT + Argon2i)
 - ✅ Protection des routes et des ressources
 - ✅ Gestion des utilisateurs (inscription, connexion, réinitialisation de mot de passe)
-- ✅ Intégration Stripe pour les paiements
+- ✅ Intégration Stripe pour les paiements et abonnements récurrents
+- ✅ Gestion des abonnements (création, annulation, réactivation)
 - ✅ Interface utilisateur moderne avec shadcn/ui
 - ✅ Envoi d'emails automatiques (Resend)
 
 ## 📋 Table des matières
+
 1. [Stack technique](#stack-technique)
 2. [Installation](#installation)
 3. [Lancement](#lancement)
@@ -39,6 +41,7 @@ Application web production-ready construite avec **Next.js 16**, **Prisma**, et 
 ## 💾 Installation
 
 ### Prérequis
+
 - Node.js 18+
 - Git
 
@@ -97,18 +100,26 @@ npm run lint         # Vérifier le code
 RPI-DEV/NextJs/
 ├── app/
 │   ├── api/auth/          # Authentification (login, register, verify, reset)
-│   ├── api/stripe/        # Paiements Stripe
+│   ├── api/stripe/        # Paiements & Abonnements Stripe
+│   ├── abonnement/        # Page gestion abonnements
 │   ├── (pages)            # Pages publiques/protégées
 │   ├── hooks/             # React hooks personnalisés
+│   │   ├── use-payment.ts
+│   │   ├── use-subscription.ts
+│   │   └── ...
 │   └── layout.tsx
 │
 ├── components/
 │   ├── *-form.tsx         # Formulaires (login, signup, etc.)
+│   ├── payment-card.tsx   # Carte de paiement
+│   ├── invoices-table.tsx # Tableau des factures
+│   ├── payments-list.tsx  # Liste des paiements
 │   └── ui/                # Composants shadcn/ui
 │
 ├── lib/
 │   ├── argon2i.ts         # Hachage passwords
 │   ├── prisma.ts          # Instance DB
+│   ├── otp.ts             # Logique OTP
 │   └── utils.ts
 │
 ├── middleware.ts          # Protection des routes
@@ -123,21 +134,25 @@ RPI-DEV/NextJs/
 ## 🔒 Authentification & Sécurité
 
 ### JWT (JSON Web Token)
+
 - **Algorithme:** HS256
 - **Durée:** 7 jours
-- **Stockage:** Cookie HttpOnly 
+- **Stockage:** Cookie HttpOnly
 
 ### Argon2i - Hachage des mots de passe
+
 - **À l'inscription:** Password → Argon2i Hash → Base de données
 - **À la connexion:** Password saisi + Hash BD → Verification (true/false)
 
 ### Protection des routes
+
 - **Middleware.ts** bloque l'accès aux routes protégées sans JWT
 - **API /api/auth/verify** pour vérifier la validité du token côté client
-- Routes publiques: `/login`, `/signup`, `/forgot-password`, `/reset-password`
-- Routes protégées: `/dashboard`, `/otp`
+- Routes publiques: `/login`, `/signup`, `/forgot-password`, `/reset-password`, `/otp`
+- Routes protégées: `/dashboard`, `/abonnement`
 
 ### Resend (Emails)
+
 - Intégration pour envoi de liens de réinitialisation de password
 - Tokens valides 1 heure
 - Envoi automatique à l'inscription et oubli de password
@@ -148,14 +163,20 @@ RPI-DEV/NextJs/
 
 ## 📡 Routes API
 
-| Route | Méthode | Description |
-|---|---|---|
-| `/api/auth/register` | POST | Créer utilisateur (email + password) |
-| `/api/auth/login` | POST | Connexion (JWT en cookie) |
-| `/api/auth/verify` | GET | Vérifier JWT valide |
-| `/api/auth/forgot-password` | POST | Demander réinitialisation |
-| `/api/auth/reset-password` | POST | Appliquer nouveau password |
-| `/api/stripe/checkout` | POST | Créer session paiement Stripe |
+| Route                       | Méthode | Description                                |
+| --------------------------- | ------- | ------------------------------------------ |
+| `/api/auth/register`        | POST    | Créer utilisateur (email + password)       |
+| `/api/auth/login`           | POST    | Connexion (JWT en cookie)                  |
+| `/api/auth/verify`          | GET     | Vérifier JWT valide                        |
+| `/api/auth/password-forgot` | POST    | Demander réinitialisation                  |
+| `/api/auth/reset-password`  | POST    | Appliquer nouveau password                 |
+| `/api/stripe/checkout`      | POST    | Créer session abonnement Stripe            |
+| `/api/stripe/subscriptions` | GET     | Récupérer les abonnements de l'utilisateur |
+| `/api/stripe/subscriptions` | POST    | Réactiver un abonnement                    |
+| `/api/stripe/subscriptions` | DELETE  | Annuler un abonnement                      |
+| `/api/stripe/invoices`      | GET     | Récupérer les factures                     |
+| `/api/stripe/invoice`       | POST    | Générer une facture                        |
+| `/api/stripe/invoice`       | DELETE  | Supprimer une facture                      |
 
 ---
 
@@ -179,63 +200,36 @@ model User {
 
 ## 👥 Équipe et contributions
 
-| Membre | Rôle |
-|---|---|
-| **Richer Anthony** | Inscription, OTP, **Intégration Resend** |
-| **Allier Esteban** | Connexion, Oubli password, Setup BDD, Git |
-| **Archimbaud Irene** | Stripe, Dashboard, UI |
+| Membre               | Rôle                                                             |
+| -------------------- | ---------------------------------------------------------------- |
+| **Richer Anthony**   | Inscription, OTP, **Intégration Resend**, Oubli password, Vercel |
+| **Allier Esteban**   | Connexion, Oubli password, Setup BDD, Git, Vercel, UI            |
+| **Archimbaud Irene** | Stripe, Dashboard                                                |
 
 ### Détails des contributions
 
 - **Richer Anthony**
+
   - ✅ Formulaire d'inscription avec validation
   - ✅ Page et intégration OTP
+  - ✅ Formulaire d'oubli et réinitialisation du MDP
   - ✅ Mise en place **Resend** pour emails automatiques
   - ✅ Hachage Argon2i
 
 - **Allier Esteban**
-  - ✅ Formulaire de connexion avec mdp oublié
-  - ✅ Génération JWT et cookies HttpOnly
-  - ✅ Configuration Neon PostgreSQL
-  - ✅ Gestion des branches Git et merges
 
-- **Irene ARCHIMBAUD**
-  - ✅ Page Dashboard (protégée)
-  - ✅ Intégration Stripe (checkout)
+  - ✅ Formulaire de connexion
+  - ✅ Formulaire d'oubli et réinitialisation du MDP
+  - ✅ Génération JWT et cookies HttpOnly
+  - ✅ Gestion des branches Git et merges
   - ✅ UI/UX moderne avec shadcn/ui
 
-- **UI** - Mélange de tous (composants, design, responsive)
+- **Irene ARCHIMBAUD**
 
----
-
-## 🌐 Déploiement (Vercel)
-
-### 1. Créer compte Vercel
-```
-https://vercel.com
-```
-
-### 2. Importer le projet
-- Connecter GitHub
-- Sélectionner le repo
-
-### 3. Configurer variables d'environnement
-```
-Dashboard → Settings → Environment Variables
-
-DATABASE_URL=...
-JWT_SECRET=...
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=...
-STRIPE_SECRET_KEY=...
-RESEND_API_KEY=...
-NEXT_PUBLIC_URL=https://votre-app.vercel.app
-NODE_ENV=production
-```
-
-### 4. Déployer
-```bash
-git push origin main  # Vercel déploie automatiquement
-```
+  - ✅ Page Dashboard (protégée)
+  - ✅ Intégration Stripe (checkout)
+  - ✅ Proxy
+  - ✅ Résiliation abonnement
 
 ---
 
@@ -254,7 +248,20 @@ git push origin main  # Vercel déploie automatiquement
 
 ---
 
-**Dernière mise à jour:** 14 janvier 2026  
+## 🚀 Application en ligne
+
+**L'app est déployée et accessible ici:**
+
+### 🔗 [https://next-js-git-master-anthos-projects-0b65de8f.vercel.app](https://next-js-git-master-anthos-projects-0b65de8f.vercel.app)
+
+### Identifiants de test
+
+- **Email:** anthony.richer@ecole-isitech.fr
+- **Password:** 1234567890
+
+---
+
+**Dernière mise à jour:** 15 janvier 2026  
 **Version:** 1.0.0  
 **Statut:** 🚀 En développement  
 **Équipe:** Anthony Richier | Allier Esteban | Irene ARCHIMBAUD
