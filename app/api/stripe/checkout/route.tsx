@@ -1,17 +1,22 @@
+
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
+
+// Log environment variables for debugging (do not log secrets in production)
+console.log("[DEBUG] STRIPE_SECRET_KEY exists:", !!process.env.STRIPE_SECRET_KEY);
+console.log("[DEBUG] NEXT_PUBLIC_BASE_URL:", process.env.NEXT_PUBLIC_BASE_URL);
+console.log("[DEBUG] JWT_SECRET exists:", !!process.env.JWT_SECRET);
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-12-15.clover",
 });
 
-import jwt from "jsonwebtoken";
-
 export async function POST(request: Request) {
   try {
     let customerEmail: string | undefined = undefined;
     let customerId: string | undefined = undefined;
-    // Try to get JWT from cookies
+
     const cookieHeader = request.headers.get("cookie");
     if (cookieHeader) {
       const tokenMatch = cookieHeader.match(/token=([^;]+)/);
@@ -23,25 +28,26 @@ export async function POST(request: Request) {
             customerEmail = decoded.email;
           }
         } catch (e) {
-          // Invalid token, ignore
+
         }
       }
     }
 
-    // If we have an email, try to find or create a Stripe customer
+
     if (customerEmail) {
-      // Try to find existing customer
+
       const customers = await stripe.customers.list({ email: customerEmail, limit: 1 });
       if (customers.data.length > 0) {
         customerId = customers.data[0].id;
       } else {
-        // Create new customer
+  
         const customer = await stripe.customers.create({ email: customerEmail });
         customerId = customer.id;
       }
     }
 
-    const session = await stripe.checkout.sessions.create({
+    // Only pass either customer or customer_email, not both
+    const sessionParams: any = {
       mode: "payment",
       payment_method_types: ["card"],
       line_items: [
@@ -58,15 +64,26 @@ export async function POST(request: Request) {
       ],
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/success`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/cancel`,
-      ...(customerId ? { customer: customerId } : {}),
-      ...(customerEmail ? { customer_email: customerEmail } : {}),
-    });
+    };
+    if (customerId) {
+      sessionParams.customer = customerId;
+    } else if (customerEmail) {
+      sessionParams.customer_email = customerEmail;
+    }
+    const session = await stripe.checkout.sessions.create(sessionParams);
 
     return NextResponse.json({ url: session.url });
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    console.error("[STRIPE CHECKOUT ERROR]", error);
+    if (error && error.stack) {
+      console.error("[STRIPE CHECKOUT ERROR STACK]", error.stack);
+    }
+    // Log environment variables at error time
+    console.error("[DEBUG] STRIPE_SECRET_KEY exists:", !!process.env.STRIPE_SECRET_KEY);
+    console.error("[DEBUG] NEXT_PUBLIC_BASE_URL:", process.env.NEXT_PUBLIC_BASE_URL);
+    console.error("[DEBUG] JWT_SECRET exists:", !!process.env.JWT_SECRET);
     return NextResponse.json(
-      { error: "Erreur Stripe" },
+      { error: "Erreur Stripe", details: error?.message || error },
       { status: 500 }
     );
   }
