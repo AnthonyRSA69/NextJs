@@ -23,7 +23,7 @@ export function SectionCards() {
   } 
 
   return (
-    <div className="flex justify-center px-4 lg:px-6">
+    <div className="flex justify-center px-4 lg:px-6 mt-8">
 
       <Card className="@container/card w-full max-w-md from-purple-900/40 to-slate-900/40 border-purple-400/30 hover:border-purple-400/50 hover:shadow-purple-500/20 bg-linear-to-t shadow-lg backdrop-blur-sm transition-all duration-300">
         <CardHeader className="text-center">
@@ -33,7 +33,7 @@ export function SectionCards() {
             <IconCrown className="size-5 text-yellow-500" />
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">PRO</Badge>
+            <Badge variant="outline">PREMIUM</Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex flex-col items-center gap-3 text-sm">

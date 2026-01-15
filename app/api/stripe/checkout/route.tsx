@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     }
 
     const sessionParams: any = {
-      mode: "payment",
+      mode: "subscription",
       payment_method_types: ["card"],
       line_items: [
         {
@@ -50,6 +50,10 @@ export async function POST(request: Request) {
               name: "Abonnement Premium",
             },
             unit_amount: 2000,
+            recurring: {
+              interval: "month",
+              interval_count: 1,
+            },
           },
           quantity: 1,
         },

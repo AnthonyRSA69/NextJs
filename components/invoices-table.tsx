@@ -5,6 +5,19 @@ interface InvoicesTableProps {
   refreshKey?: number;
 }
 
+const statusTranslations: { [key: string]: string } = {
+  draft: "Brouillon",
+  open: "Ouvert",
+  paid: "Payé",
+  succeeded: "OK",
+  uncollectible: "Irrécupérable",
+  void: "Annulé",
+};
+
+const getStatusLabel = (status: string) => {
+  return statusTranslations[status] || status;
+};
+
 export function InvoicesTable({ refreshKey }: InvoicesTableProps) {
   const [invoices, setInvoices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,7 +72,7 @@ export function InvoicesTable({ refreshKey }: InvoicesTableProps) {
             <tr key={inv.id} className="border-b border-purple-500/20 hover:bg-purple-700/30 transition-colors duration-200">
               <td className="p-3 text-purple-100 font-medium">{inv.number || inv.id}</td>
               <td className="p-3 text-purple-100 font-medium">{(inv.amount_due / 100).toFixed(2)} {inv.currency?.toUpperCase()}</td>
-              <td className="p-3 text-purple-100">{inv.status}</td>
+              <td className="p-3 text-purple-100">{getStatusLabel(inv.status)}</td>
               <td className="p-3 text-purple-200/80">{inv.created ? new Date(inv.created * 1000).toLocaleString() : ""}</td>
               <td className="p-3 flex gap-2">
                 {inv.invoice_pdf ? (

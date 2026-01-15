@@ -4,11 +4,11 @@ import * as React from "react"
 import {
   IconCamera,
   IconChartBar,
-  IconDashboard,
   IconDatabase,
   IconFileAi,
   IconFileDescription,
   IconFileWord,
+  IconFileText,
   IconFolder,
   IconHelp,
   IconInnerShadowTop,
@@ -45,7 +45,7 @@ const data = {
     {
       title: "Dashboard",
       url: "#",
-      icon: IconDashboard,
+      icon: IconFileText,
     },
     {
       title: "Lifecycle",
@@ -164,7 +164,7 @@ export function AppSidebar() {
       <ul className="flex flex-col gap-2 flex-1">
         <li>
           <a href="/dashboard" className="flex items-center gap-2 text-purple-200 hover:text-white hover:bg-purple-700/30 rounded-md px-3 py-2 transition-all duration-200">
-            <IconDashboard className="w-5 h-5" />
+            <IconFileText className="w-5 h-5" />
             <span>Documents</span>
           </a>
         </li>

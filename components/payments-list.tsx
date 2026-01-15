@@ -5,6 +5,19 @@ interface PaymentsListProps {
   onInvoiceGenerated?: () => void;
 }
 
+const statusTranslations: { [key: string]: string } = {
+  succeeded: "Réussi",
+  processing: "En cours de traitement",
+  requires_payment_method: "Méthode de paiement requise",
+  requires_confirmation: "Confirmation requise",
+  requires_action: "Action requise",
+  canceled: "Annulé",
+};
+
+const getStatusLabel = (status: string) => {
+  return statusTranslations[status] || status;
+};
+
 export function PaymentsList({ onInvoiceGenerated }: PaymentsListProps) {
   const [payments, setPayments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -72,7 +85,7 @@ export function PaymentsList({ onInvoiceGenerated }: PaymentsListProps) {
           {payments.map((p) => (
             <tr key={p.id} className="border-b border-purple-500/20 hover:bg-purple-700/30 transition-colors duration-200">
               <td className="p-3 text-purple-100 font-medium">{(p.amount / 100).toFixed(2)} {p.currency.toUpperCase()}</td>
-              <td className="p-3 text-purple-100">{p.status}</td>
+              <td className="p-3 text-purple-100">{getStatusLabel(p.status)}</td>
               <td className="p-3 text-purple-200/80">{new Date(p.created * 1000).toLocaleString()}</td>
               <td className="p-3">
                 {p.invoice ? (
