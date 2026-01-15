@@ -1,4 +1,4 @@
-"use client"
+/*"use client"
 
 import { ResetPasswordForm } from "@/components/reset-password-form"
 import { useSearchParams } from "next/navigation"
@@ -39,3 +39,4 @@ export default function ResetPasswordPage() {
     </Suspense>
   )
 }
+*/
