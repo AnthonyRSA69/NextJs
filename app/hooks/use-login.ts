@@ -28,7 +28,7 @@ export function useLogin() {
                 return
             }
 
-            router.push("/dashboard")
+            window.location.href = "/dashboard"
         } catch (err) {
             setError("Erreur serveur")
             console.error(err)
