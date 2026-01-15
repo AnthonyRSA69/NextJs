@@ -46,7 +46,7 @@ export function SignupForm({
                   onChange={(e) => register.setFirstName(e.target.value)}
                   placeholder="Jean" 
                   disabled={register.loading}
-                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 focus:border-purple-500 focus:ring-purple-500"
+                  className="bg-slate-700/80 border-slate-600 text-white placeholder:text-slate-400 hover:bg-slate-600/80 hover:border-purple-400/50 focus:bg-slate-600/80 focus:border-purple-500 focus:ring-purple-500/30 transition-all duration-200"
                   required 
                 />
               </Field>
@@ -61,7 +61,7 @@ export function SignupForm({
                   onChange={(e) => register.setLastName(e.target.value)}
                   placeholder="Dupont"
                   disabled={register.loading}
-                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 focus:border-purple-500 focus:ring-purple-500"
+                  className="bg-slate-700/80 border-slate-600 text-white placeholder:text-slate-400 hover:bg-slate-600/80 hover:border-purple-400/50 focus:bg-slate-600/80 focus:border-purple-500 focus:ring-purple-500/30 transition-all duration-200"
                   required 
                 />
               </Field>
@@ -76,7 +76,7 @@ export function SignupForm({
                   onChange={(e) => register.setEmail(e.target.value)}
                   placeholder="m@example.com"
                   disabled={register.loading}
-                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 focus:border-purple-500 focus:ring-purple-500"
+                  className="bg-slate-700/80 border-slate-600 text-white placeholder:text-slate-400 hover:bg-slate-600/80 hover:border-purple-400/50 focus:bg-slate-600/80 focus:border-purple-500 focus:ring-purple-500/30 transition-all duration-200"
                   required
                 />
               </Field>
@@ -92,7 +92,7 @@ export function SignupForm({
                       value={register.password}
                       onChange={(e) => register.setPassword(e.target.value)}
                       disabled={register.loading}
-                      className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 focus:border-purple-500 focus:ring-purple-500"
+                      className="bg-slate-700/80 border-slate-600 text-white placeholder:text-slate-400 hover:bg-slate-600/80 hover:border-purple-400/50 focus:bg-slate-600/80 focus:border-purple-500 focus:ring-purple-500/30 transition-all duration-200"
                       required 
                     />
                   </Field>
@@ -107,7 +107,7 @@ export function SignupForm({
                       value={register.confirmPassword}
                       onChange={(e) => register.setConfirmPassword(e.target.value)}
                       disabled={register.loading}
-                      className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 focus:border-purple-500 focus:ring-purple-500"
+                      className="bg-slate-700/80 border-slate-600 text-white placeholder:text-slate-400 hover:bg-slate-600/80 hover:border-purple-400/50 focus:bg-slate-600/80 focus:border-purple-500 focus:ring-purple-500/30 transition-all duration-200"
                       required 
                     />
                   </Field>
@@ -120,12 +120,12 @@ export function SignupForm({
                 <Button
                   type="submit"
                   disabled={register.loading}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold"
+                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 hover:shadow-lg hover:shadow-purple-500/40 hover:scale-[1.02] active:scale-[0.98] text-white font-semibold transition-all duration-200"
                 >
                   {register.loading ? "Création en cours..." : "Créer un compte"}
                 </Button>
-                <FieldDescription className="text-center text-slate-400 hover:text-slate-300 cursor-pointer">
-                  Vous avez déjà un compte? <a href="/login" className="text-purple-400 hover:text-purple-300 underline">Se connecter</a>
+                <FieldDescription className="text-center text-slate-400 hover:text-slate-300 cursor-pointer transition-colors duration-200">
+                  Vous avez déjà un compte? <a href="/login" className="text-purple-400 hover:text-purple-300 hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.5)] underline transition-all duration-200">Se connecter</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>
