@@ -1,3 +1,4 @@
+// OTP Verification API
 import { prisma } from "@/lib/prisma";
 import { verifyTempUserJWT } from "@/lib/jwt";
 import { cookies } from "next/headers";
@@ -6,9 +7,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   const { email, code } = await req.json();
 
-  console.log("[OTP VERIFY] Verifying code for email:", email);
-
-  // Verify OTP code
+  // Verifier le code OTP dans la BDD
   const otp = await prisma.oTP.findFirst({
     where: { email, code, used: false },
     orderBy: { createdAt: "desc" }
@@ -22,7 +21,7 @@ export async function POST(req: Request) {
     return NextResponse.json({error: true, message: "code expirée" }, { status: 400 });
   }
 
-  // Mark OTP as used
+  // Changer le status du code OTP en utilisé
   await prisma.oTP.update({
     where: { id: otp.id },
     data: { used: true }
@@ -32,9 +31,7 @@ export async function POST(req: Request) {
   const cookieStore = await cookies();
   const tempToken = cookieStore.get("tempUserToken")?.value;
 
-  if (tempToken) {
-    console.log("[OTP VERIFY] Found temp user token, creating account");
-    
+  if (tempToken) {    
     const userData = await verifyTempUserJWT(tempToken);
 
     if (userData) {
@@ -47,10 +44,7 @@ export async function POST(req: Request) {
             password: userData.password,
           },
         });
-
-        console.log("[OTP VERIFY] User created successfully:", user.email);
-
-        // suppresion du temp
+        // suppresion du temp token quand l'user et creer 
         const response = NextResponse.json({ 
           error: false, 
           message: "Compte créé et vérifié!",

@@ -11,7 +11,7 @@ export function generateOtp() {
 export async function sendOTP(email: string) {
   const code = generateOtp();
   console.log("Send OTP appele dans la console", code)
-  const expiresAt = new Date(Date.now() + 10 /*Pour le nombre de minutes*/ * 60/*minutes*/ * 1000 /*milisecindes*/);
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000 ); //ceci fais 10minutes = temps avant expiration
 
   try {
     await prisma.oTP.create({
