@@ -1,3 +1,4 @@
+// REGISTER incsripiton API 
 import type { NextRequest } from "next/server";
 import type { IRegister } from "@/app/interfaces/users";
 import { MRegister } from "@/middleware/register";
@@ -9,7 +10,7 @@ import { NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
     const { firstName, lastName, email, password, confirmPassword }: IRegister = await request.json();
 
-    // Validation
+    // Validation des infos d'inscription via le middleware
     const errors = MRegister({ firstName, lastName, email, password, confirmPassword });
     if (errors && errors.length > 0) {
         return NextResponse.json({ error: true, validation: errors }, { status: 400 });
@@ -45,7 +46,7 @@ export async function POST(request: NextRequest) {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            maxAge: 900, // 15 minutes
+            maxAge: 900, // 15 minutes en secondes
         });
 
         return response;
