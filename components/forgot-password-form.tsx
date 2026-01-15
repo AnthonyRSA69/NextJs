@@ -34,14 +34,18 @@ export function ForgotPasswordForm ({
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Mot de passe oublié</CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={ForgotPassword.handleForgotPassword}>{}
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email" className="text-slate-200">Email</FieldLabel>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
+                  value={ForgotPassword.email}
+                  onChange={(e) => ForgotPassword.setEmail(e.target.value)}
                   placeholder="m@example.com"
+                  disabled={ForgotPassword.loading}
                   className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 focus:border-purple-500 focus:ring-purple-500"
                   required
                 />
@@ -49,12 +53,13 @@ export function ForgotPasswordForm ({
               <Field>
                 <Button 
                   type="submit"
+                  disabled={ForgotPassword.loading}
                   className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold"
-                  onClick={() => {router.push("/otp")}}
-                  >Envoyer le code
+                  >{ForgotPassword.loading ? "Envoie du code..." : "Envoyer le code"}
                 </Button>
                 <FieldDescription 
-                  className="text-center text-slate-400 hover:text-slate-300 cursor-pointer">
+                  className="text-center text-slate-400 hover:text-slate-300 cursor-pointer"
+                  >
                 </FieldDescription>
               </Field>
             </FieldGroup>

@@ -1,5 +1,4 @@
 import type { NextRequest } from "next/server";
-import { createTempUserJWT } from "@/lib/jwt";
 import { sendOTP } from "@/lib/otp";
 import { NextResponse } from "next/server";
 
@@ -26,6 +25,13 @@ export async function POST(request: NextRequest) {
             email
         }, { status: 200 });
 
+        return reponse;
     } catch (e) {
+        console.error("Forgot Password erreur:", e);
+        return NextResponse.json({ 
+            error: true, 
+            message: "Erreur lors de l'enregistrement", 
+            code: "E02" 
+        }, { status: 500 });
     }
 }

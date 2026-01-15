@@ -13,17 +13,21 @@ export function useForgotPassword() {
         setError("")
 
         try {
-            const forgotmdp  = await fetch("/api/auth/forgot-opassword", {
+            const forgotmdp  = await fetch("/api/auth/password-forgot", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ email }),
             })
-            if (!forgotmdp .ok) {}
+            if (!forgotmdp.ok) {}
         }
         catch (err) {
         }
+        
+        // on envoie sur la page de l'otp avec l'email et le mode à reset 
+        // afin de bien aller sur reset apres la validation du code et pas sur login
+        router.push(`/otp?email=${email}&mode=reset`)
     }
     return {
         email,
@@ -32,5 +36,6 @@ export function useForgotPassword() {
         setLoading,
         error,
         setError,
+        handleForgotPassword,
     }
 }

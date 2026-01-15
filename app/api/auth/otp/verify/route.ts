@@ -4,9 +4,8 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const { email, code } = await req.json();
-
-  console.log("[OTP VERIFY] Verifying code for email:", email);
+  try {
+    const { email, code } = await req.json();
 
   // Verify OTP code
   const otp = await prisma.oTP.findFirst({
@@ -33,8 +32,6 @@ export async function POST(req: Request) {
   const tempToken = cookieStore.get("tempUserToken")?.value;
 
   if (tempToken) {
-    console.log("[OTP VERIFY] Found temp user token, creating account");
-    
     const userData = await verifyTempUserJWT(tempToken);
 
     if (userData) {
@@ -47,8 +44,6 @@ export async function POST(req: Request) {
             password: userData.password,
           },
         });
-
-        console.log("[OTP VERIFY] User created successfully:", user.email);
 
         // suppresion du temp
         const response = NextResponse.json({ 
@@ -65,7 +60,7 @@ export async function POST(req: Request) {
         return response;
       } catch (err: any) {
         
-        //chcek si l'user exite deja
+        //check si l'user existe deja
         if (err.code === "P2002") {
           return NextResponse.json({ 
             error: true, 
@@ -81,5 +76,10 @@ export async function POST(req: Request) {
     }
   }
 
+  // Cas où on ne crée pas d'utilisateur (réinitialisation de mot de passe)
   return NextResponse.json({ error: false, message: "Validé !" });
+  } catch (error) {
+    console.error("Erreur dans l'API OTP verify:", error);
+    return NextResponse.json({ error: true, message: "Erreur serveur" }, { status: 500 });
+  }
 }
