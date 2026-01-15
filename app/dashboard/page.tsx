@@ -1,34 +1,50 @@
 "use client";
+import { AppSidebar } from "@/components/app-sidebar"
+import { ChartAreaInteractive } from "@/components/chart-area-interactive"
+import { DataTable } from "@/components/data-table"
+import { SectionCards } from "@/components/section-cards"
+import { PaymentsList } from "@/components/payments-list"
+import { SiteHeader } from "@/components/site-header"
+import { InvoicesTable } from "@/components/invoices-table"
+import { useState, useCallback } from "react"
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@/components/ui/sidebar"
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import data from "./data.json"
 
-export default function DashboardPage() {
-  const handlePayment = async () => {
-    const res = await fetch("api/stripe/checkout", {
-      method: "POST",
-    });
+export default function Page() {
 
-    const data = await res.json();
-
-    if (data.url) {
-      window.location.href = data.url;
-    }
-  };
+  const [invoicesRefreshKey, setInvoicesRefreshKey] = useState(0);
+  const refreshInvoices = useCallback(() => setInvoicesRefreshKey((k) => k + 1), []);
 
   return (
-    <div className="p-8 max-w-xl mx-auto">
-      <Card>
-        <CardHeader>
-          <CardTitle>Dashboard</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p>Accédez aux fonctionnalités premium</p>
-          <Button onClick={handlePayment}>
-            Payer avec Stripe
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
-  );
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--header-height": "calc(var(--spacing) * 12)",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar />
+      <SidebarInset>
+        <SiteHeader />
+        <div className="flex flex-1 flex-col">
+          <div className="@container/main flex flex-1 flex-col gap-2">
+            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+              <SectionCards />
+              <div className="px-4 lg:px-6">
+                <PaymentsList onInvoiceGenerated={refreshInvoices} />
+                <InvoicesTable refreshKey={invoicesRefreshKey} />
+                <ChartAreaInteractive />
+              </div>
+              <DataTable data={data} />
+            </div>
+          </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
+  )
 }
