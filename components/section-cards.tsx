@@ -23,95 +23,27 @@ export function SectionCards() {
   } 
 
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+    <div className="flex justify-center px-4 lg:px-6 mt-8">
 
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Fonctionnalités premium</CardDescription>
-          <CardTitle className="flex items-center gap-2 text-2xl font-semibold @[250px]/card:text-3xl">
+      <Card className="@container/card w-full max-w-md from-purple-900/40 to-slate-900/40 border-purple-400/30 hover:border-purple-400/50 hover:shadow-purple-500/20 bg-linear-to-t shadow-lg backdrop-blur-sm transition-all duration-300">
+        <CardHeader className="text-center">
+          <CardDescription className="text-purple-200">Fonctionnalités premium</CardDescription>
+          <CardTitle className="flex items-center justify-center gap-2 text-2xl font-semibold text-white @[250px]/card:text-3xl">
             Accès Premium
             <IconCrown className="size-5 text-yellow-500" />
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">PRO</Badge>
+            <Badge variant="outline">PREMIUM</Badge>
           </CardAction>
         </CardHeader>
-        <CardFooter className="flex flex-col items-start gap-3 text-sm">
-          <p className="text-muted-foreground">
+        <CardFooter className="flex flex-col items-center gap-3 text-sm">
+          <p className="text-purple-200/80 text-center">
             Débloquez toutes les fonctionnalités avancées de la plateforme.
           </p>
-          <Button onClick={handleStripeCheckout} className="cursor-pointer">
-            Payer
+          <p className="text-3xl font-bold text-white">20€ <span className="text-base font-normal text-purple-300">/ mois</span></p>
+          <Button onClick={handleStripeCheckout} className="cursor-pointer bg-purple-600 hover:bg-purple-500 hover:shadow-md hover:shadow-purple-500/30 transition-all duration-200">
+            Payer maintenant
           </Button>
-        </CardFooter>
-      </Card>
-
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>New Customers</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline" className="cursor-pointer">
-              <IconTrendingDown />
-              -20%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period <IconTrendingDown className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Acquisition needs attention
-          </div>
-        </CardFooter>
-      </Card>
-
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline" className="cursor-pointer">
-              <IconTrendingUp />
-              +12.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention <IconTrendingUp className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Engagement exceed targets
-          </div>
-        </CardFooter>
-      </Card>
-
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Growth Rate</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline" className="cursor-pointer">
-              <IconTrendingUp />
-              +4.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance increase <IconTrendingUp className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Meets growth projections
-          </div>
         </CardFooter>
       </Card>
 

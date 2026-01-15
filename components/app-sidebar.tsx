@@ -4,11 +4,11 @@ import * as React from "react"
 import {
   IconCamera,
   IconChartBar,
-  IconDashboard,
   IconDatabase,
   IconFileAi,
   IconFileDescription,
   IconFileWord,
+  IconFileText,
   IconFolder,
   IconHelp,
   IconInnerShadowTop,
@@ -18,6 +18,7 @@ import {
   IconSettings,
   IconUsers,
   IconLogout,
+  IconCreditCard,
 } from "@tabler/icons-react"
 
 import { NavDocuments } from "@/components/nav-documents"
@@ -44,7 +45,7 @@ const data = {
     {
       title: "Dashboard",
       url: "#",
-      icon: IconDashboard,
+      icon: IconFileText,
     },
     {
       title: "Lifecycle",
@@ -159,19 +160,24 @@ export function AppSidebar() {
   };
 
   return (
-    <nav className="flex flex-col h-full p-6 gap-4">
-      <div className="font-bold text-lg mb-6">Acme Inc.</div>
-      <ul className="flex flex-col gap-2">
+    <nav className="flex flex-col min-h-svh h-full p-6 gap-4 bg-gradient-to-b from-slate-900 via-purple-900/80 to-slate-900 border-r border-purple-400/30 sticky top-0">
+      <ul className="flex flex-col gap-2 flex-1">
         <li>
-          <a href="/dashboard" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
-            <IconDashboard className="w-5 h-5" />
-            <span>Dashboard</span>
+          <a href="/dashboard" className="flex items-center gap-2 text-purple-200 hover:text-white hover:bg-purple-700/30 rounded-md px-3 py-2 transition-all duration-200">
+            <IconFileText className="w-5 h-5" />
+            <span>Documents</span>
+          </a>
+        </li>
+        <li>
+          <a href="/abonnement" className="flex items-center gap-2 text-purple-200 hover:text-white hover:bg-purple-700/30 rounded-md px-3 py-2 transition-all duration-200">
+            <IconCreditCard className="w-5 h-5" />
+            <span>Abonnement</span>
           </a>
         </li>
       </ul>
       <button
         onClick={handleLogout}
-        className="mt-auto flex items-center gap-2 text-destructive hover:text-destructive-foreground border border-destructive rounded px-3 py-2 transition-colors cursor-pointer"
+        className="flex items-center gap-2 text-red-400 hover:text-white hover:bg-red-600/30 border border-red-500/30 hover:border-red-500/50 rounded-md px-3 py-2 transition-all duration-200 cursor-pointer"
       >
         <IconLogout className="w-5 h-5" />
         <span>Se déconnecter</span>

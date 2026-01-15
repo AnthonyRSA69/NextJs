@@ -1,3 +1,4 @@
+// OTP POST API
 import { NextResponse } from "next/server";
 import { sendOTP } from "@/lib/otp";
 

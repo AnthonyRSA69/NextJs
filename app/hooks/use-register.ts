@@ -46,18 +46,12 @@ export function useRegister() {
                 body: JSON.stringify(formData),
             })
 
-            console.log("Status:", response.status)
 
             const data = await response.json()
-            console.log("Réponse:", data)
 
             if (!response.ok) {
                 if (response.status === 400 && data.validation) {
-                    console.log("Erreurs de validation:", data.validation)
-                    
-                    const messages = data.validation.map((err: ValidationError) => err.message)
-                    console.log("Messages extraits:", messages)
-                    
+                    const messages = data.validation.map((err: ValidationError) => err.message)                    
                     setValidationErrors(messages)
                     setError("Veuillez corriger les erreurs ci-dessus")
                     return

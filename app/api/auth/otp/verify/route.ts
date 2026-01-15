@@ -1,3 +1,4 @@
+// OTP Verification API
 import { prisma } from "@/lib/prisma";
 import { verifyTempUserJWT } from "@/lib/jwt";
 import { cookies } from "next/headers";
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
     return NextResponse.json({error: true, message: "code expirée" }, { status: 400 });
   }
 
-  // Mark OTP as used
+  // Changer le status du code OTP en utilisé
   await prisma.oTP.update({
     where: { id: otp.id },
     data: { used: true }
@@ -44,8 +45,7 @@ export async function POST(req: Request) {
             password: userData.password,
           },
         });
-
-        // suppresion du temp
+        // suppresion du temp token quand l'user et creer 
         const response = NextResponse.json({ 
           error: false, 
           message: "Compte créé et vérifié!",

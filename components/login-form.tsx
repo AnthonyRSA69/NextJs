@@ -45,7 +45,7 @@ export function LoginForm({
                   value={login.email}
                   onChange={(e) => login.setEmail(e.target.value)}
                   placeholder="m@example.com"
-                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 focus:border-purple-500 focus:ring-purple-500"
+                  className="bg-slate-700/80 border-slate-600 text-white placeholder:text-slate-400 hover:bg-slate-600/80 hover:border-purple-400/50 focus:bg-slate-600/80 focus:border-purple-500 focus:ring-purple-500/30 transition-all duration-200"
                   required
                 />
               </Field>
@@ -54,7 +54,7 @@ export function LoginForm({
                   <FieldLabel htmlFor="password" className="text-slate-200">Password</FieldLabel>
                   <a
                     href="/forgot-password"
-                    className="ml-auto text-sm text-purple-400 underline-offset-4 hover:text-purple-300 hover:underline"
+                    className="ml-auto text-sm text-purple-400 underline-offset-4 hover:text-purple-300 hover:underline hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.5)] transition-all duration-200"
                   >
                     Mot de passe oublié?
                   </a>
@@ -64,7 +64,7 @@ export function LoginForm({
                   type="password"
                   value={login.password}
                   onChange={(e) => login.setPassword(e.target.value)}
-                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 focus:border-purple-500 focus:ring-purple-500"
+                  className="bg-slate-700/80 border-slate-600 text-white placeholder:text-slate-400 hover:bg-slate-600/80 hover:border-purple-400/50 focus:bg-slate-600/80 focus:border-purple-500 focus:ring-purple-500/30 transition-all duration-200"
                   required 
                 />
               </Field>
@@ -73,15 +73,15 @@ export function LoginForm({
                 <Button 
                   type="submit"
                   disabled={login.loading}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold">
+                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 hover:shadow-lg hover:shadow-purple-500/40 hover:scale-[1.02] active:scale-[0.98] text-white font-semibold transition-all duration-200">
                   {login.loading ? "Connexion en cours..." : "Se connecter"}
                 </Button>
                 <FieldDescription 
-                  className="text-center text-slate-400 hover:text-slate-300 cursor-pointer"
+                  className="text-center text-slate-400 hover:text-slate-300 cursor-pointer transition-colors duration-200"
                   onClick={() => {
                     router.push("/signup");
                   }}>
-                  Pas encore de compte? <a href="/signup" className="text-purple-400 hover:text-purple-300">S&apos;inscrire</a>
+                  Pas encore de compte? <a href="/signup" className="text-purple-400 hover:text-pink-400 underline-offset-4 hover:underline transition-all duration-200">S&apos;inscrire</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>
