@@ -35,8 +35,9 @@ export function useOTP(email: string) {
         setError(data.message || "Code incorrect")
         return
       }
-
+      console.log("OTP BON")
       setSuccess(true)
+      
     } catch (err) {
       setError("Erreur réseau")
     } finally {
