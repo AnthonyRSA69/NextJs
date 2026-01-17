@@ -1,6 +1,6 @@
-# 🚀 RPI-DEV NextJs
+# 🚀 DashPro
 
-Application web production-ready construite avec **Next.js 16**, **Prisma**, et **Neon PostgreSQL**.
+Plateforme de gestion d'abonnements et paiements production-ready construite avec **Next.js 16**, **Prisma**, et **Neon PostgreSQL**.
 
 ## 🎯 Objectifs
 
@@ -235,16 +235,15 @@ model User {
 
 ## ✅ Checklist avant rendu
 
-- [ ] `.env.local` dans `.gitignore`
-- [ ] Code testé et fonctionnel
-- [ ] Pas de console.log en production
-- [ ] Design responsive (mobile + desktop)
-- [ ] Routes protégées testées
-- [ ] Commits Git clairs et organisés
-- [ ] README à jour
-- [ ] Déployé sur Vercel
-- [ ] Variables d'env configurées (prod)
-- [ ] Emails testés (Resend)
+- [x] `.env.local` dans `.gitignore`
+- [x] Code testé et fonctionnel
+- [x] Design responsive (mobile + desktop)
+- [x] Routes protégées testées
+- [x] Commits Git clairs et organisés
+- [x] README à jour
+- [x] Déployé sur Vercel
+- [x] Variables d'env configurées 
+- [x] Emails testés (Resend)
 
 ---
 
